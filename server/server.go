@@ -65,10 +65,11 @@ func main() {
 						}
 					}
 					log.Println(err)
-					return
+					break
 				}
 				go handleConn(c)
 			}
+			wg.Done()
 		}()
 		log.Println("TCP server on %s", l.Addr())
 	}
