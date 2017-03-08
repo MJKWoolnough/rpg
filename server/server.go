@@ -20,6 +20,7 @@ var (
 var dir http.FileSystem = httpdir.Default
 
 func ws(c *websocket.Conn) {
+	c.PayloadType = websocket.BinaryFrame
 	handleConn(c)
 }
 
