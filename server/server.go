@@ -8,9 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/MJKWoolnough/byteio"
 	"github.com/MJKWoolnough/httpdir"
-	"github.com/MJKWoolnough/rpg/internal/protocol"
 	"golang.org/x/net/websocket"
 )
 
@@ -24,31 +22,6 @@ var dir http.FileSystem = httpdir.Default
 func ws(c *websocket.Conn) {
 	c.PayloadType = websocket.BinaryFrame
 	handleConn(c)
-}
-
-func handleConn(c net.Conn) {
-	r := byteio.StickyReader{Reader: byteio.LittleEndianReader{Reader: c}}
-	w := byteio.StickyWriter{byteio.LittleEndianWriter{Writer: c}}
-	for {
-		switch r.ReadUint8() {
-		case protocol.Close:
-			c.Close()
-			return
-		case protocol.LayerList:
-			w.WriteUint32(len(layers))
-			for _, l := range layers {
-				w.WriteUint32(uint32(len(l)))
-				w.Write(l)
-			}
-		case protocol.LayerData:
-			layer := r.ReadUint8()
-			if layer >= len(layers) {
-				w.WriteUint8(0)
-				continue
-			}
-			w.Write(layers[layer])
-		}
-	}
 }
 
 func main() {
