@@ -30,7 +30,6 @@ func main() {
 		flag.Usage()
 		return
 	}
-	s := new(State)
 	var wg sync.WaitGroup
 	if *httpPort >= 0 {
 		l, err := net.Listen("tcp", fmt.Sprintf(":%d", *httpPort))
