@@ -4,4 +4,4 @@ package main
 
 import "github.com/MJKWoolnough/gopherjs/xjs"
 
-var printError = xjs.Alert
+var logPrintf = xjs.Alert

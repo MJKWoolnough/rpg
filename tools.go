@@ -4,4 +4,4 @@ package main
 
 import "log"
 
-var printError = log.Printf
+var logPrintf = log.Printf
