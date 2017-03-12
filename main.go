@@ -1,10 +1,12 @@
+//+build !js
+
 package main
 
+import "log"
+
 func main() {
-	ctx, err := getContext(640, 480)
+	err := run()
 	if err != nil {
-		logPrintf("error initialising context: %s", err)
-		return
+		log.Printf(err)
 	}
-	defer ctx.Close()
 }
