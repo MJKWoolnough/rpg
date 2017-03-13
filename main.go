@@ -7,6 +7,6 @@ import "log"
 func main() {
 	err := run()
 	if err != nil {
-		log.Printf(err)
+		log.Printf("%s", err)
 	}
 }
