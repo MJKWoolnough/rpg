@@ -3,6 +3,7 @@
 package main
 
 import (
+	_ "github.com/MJKWoolnough/engine/windows/webgl"
 	"github.com/MJKWoolnough/gopherjs/xjs"
 	"honnef.co/go/js/dom"
 )
