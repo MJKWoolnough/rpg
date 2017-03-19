@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"math/rand"
 
 	"github.com/MJKWoolnough/engine"
@@ -8,10 +9,16 @@ import (
 )
 
 func run() error {
+	monitors := engine.GetMonitors()
+	if len(monitors) == 0 {
+		log.Println("no monitors")
+		return
+	}
+	modes := monitors[0].GetModes()
 	c := engine.Config{
-		Width:  800,
-		Height: 600,
-		Title:  "Test",
+		Monitor: monitors[0],
+		Mode:    modes[len(modes)-1],
+		Title:   "Test",
 	}
 	return engine.Loop(c, loop)
 }
