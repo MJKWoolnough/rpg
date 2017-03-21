@@ -6,7 +6,7 @@ import (
 	"log"
 
 	_ "github.com/MJKWoolnough/engine/graphics/gles2"
-	_ "github.com/MJKWoolnough/engine/windows/glfw31"
+	_ "github.com/MJKWoolnough/engine/windows/glfw32"
 )
 
 func main() {
