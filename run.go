@@ -1,20 +1,22 @@
 package main
 
 import (
-	"log"
-	"math/rand"
+	"errors"
+	"image/color"
 
 	"github.com/MJKWoolnough/engine"
-	"github.com/go-gl/gl/v3.1/gles2"
+	"github.com/MJKWoolnough/limage/lcolor"
 )
 
 func run() error {
 	monitors := engine.GetMonitors()
 	if len(monitors) == 0 {
-		log.Println("no monitors")
-		return
+		return errors.New("no monitor")
 	}
 	modes := monitors[0].GetModes()
+	if len(modes) == 0 {
+		return errors.New("no modes")
+	}
 	c := engine.Config{
 		Monitor: monitors[0],
 		Mode:    modes[len(modes)-1],
@@ -24,9 +26,30 @@ func run() error {
 }
 
 func loop(w, h int, t float64) {
-	gles2.ClearColor(rand.Float32(), rand.Float32(), rand.Float32(), 1)
-	gles2.Clear(gles2.COLOR_BUFFER_BIT)
 	if engine.KeyPressed(engine.KeyEscape) {
 		engine.Close()
+		return
 	}
+	drawSquareGrid(lcolor.RGB{R: 255})
+	setCamera()
+}
+
+type xyz struct {
+	X, Y, Z float64
+}
+
+func drawSquareGrid(c color.Color) {
+	for i := float64(-1); i < 1; i += 0.1 {
+		drawLine(c, xyz{i, -1, 0}, xyz{i, 1, 0})
+		drawLine(c, xyz{-1, i, 0}, xyz{1, i, 0})
+	}
+}
+
+func drawHexGrid(c color.Color) {
+
+}
+
+type camera struct {
+	Position, Facing xyz
+	Yaw, Pitch, Roll float64
 }
