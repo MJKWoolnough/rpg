@@ -30,8 +30,8 @@ func loop(w, h int, t float64) {
 		engine.Close()
 		return
 	}
-	drawSquareGrid(lcolor.RGB{R: 255})
-	setCamera()
+	drawHexGrid(lcolor.RGB{R: 255})
+	//setCamera()
 }
 
 type xyz struct {
@@ -46,7 +46,12 @@ func drawSquareGrid(c color.Color) {
 }
 
 func drawHexGrid(c color.Color) {
-
+	drawLine(c, xyz{0, 0, 0}, xyz{0.1, 0, 0})
+	drawLine(c, xyz{0.1, 0, 0}, xyz{0.17, 0.07, 0})
+	drawLine(c, xyz{0.17, 0.07, 0}, xyz{0.1, 0.14, 0})
+	drawLine(c, xyz{0.1, 0.14, 0}, xyz{0, 0.14, 0})
+	drawLine(c, xyz{0, 0.14, 0}, xyz{-0.07, 0.07, 0})
+	drawLine(c, xyz{-0.07, 0.07, 0}, xyz{0, 0, 0})
 }
 
 type camera struct {
