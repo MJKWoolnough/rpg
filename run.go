@@ -17,12 +17,15 @@ func run() error {
 	if len(modes) == 0 {
 		return errors.New("no modes")
 	}
-	c := engine.Config{
+	if err := engine.Init(engine.Config{
 		Monitor: monitors[0],
 		Mode:    modes[len(modes)-1],
 		Title:   "Test",
+	}); err != nil {
+		return err
 	}
-	return engine.Loop(c, loop)
+	engine.Loop(c, loop)
+	return engine.Uninit()
 }
 
 func loop(w, h int, t float64) {
