@@ -24,7 +24,7 @@ func run() error {
 	}); err != nil {
 		return err
 	}
-	engine.Loop(c, loop)
+	engine.Loop(loop)
 	return engine.Uninit()
 }
 
