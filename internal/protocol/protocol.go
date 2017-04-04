@@ -8,6 +8,7 @@ import (
 
 const (
 	Close byte = iota
+	TakeControl
 	LayerList
 	LayerData
 )

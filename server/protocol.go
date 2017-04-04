@@ -6,8 +6,6 @@ import (
 	"github.com/MJKWoolnough/rpg/internal/protocol"
 )
 
-var layers [][]byte
-
 func handleConn(c net.Conn) {
 	r := protocol.NewReader(c)
 	w := protocol.NewWriter(c)
@@ -16,6 +14,9 @@ func handleConn(c net.Conn) {
 		case protocol.Close:
 			c.Close()
 			return
+		case protocol.TakeControl:
+			// Auth?
+
 		case protocol.LayerList:
 			w.WriteUint32(uint32(len(layers)))
 			for _, l := range layers {
