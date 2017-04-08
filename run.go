@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"image/color"
 
 	"github.com/MJKWoolnough/engine"
 	"github.com/MJKWoolnough/limage/lcolor"
@@ -28,42 +27,18 @@ func run() error {
 	return engine.Uninit()
 }
 
+var g Grid
+
 func loop(w, h int, t float64) {
 	if engine.KeyPressed(engine.KeyEscape) {
 		engine.Close()
 		return
 	}
-	drawHexGrid(lcolor.RGB{R: 255})
-	//setCamera()
+	g.Draw(lcolor.RGB{R: 255})
 }
 
 type xyz struct {
 	X, Y, Z float64
-}
-
-func drawSquareGrid(c color.Color) {
-	for i := float64(-1); i < 1; i += 0.1 {
-		drawLine(c, xyz{i, -1, 0}, xyz{i, 1, 0})
-		drawLine(c, xyz{-1, i, 0}, xyz{1, i, 0})
-	}
-}
-
-func drawHexGrid(c color.Color) {
-	offset := true
-	for j := float64(-1); j <= 1.07; j += 0.07 {
-		start := float64(-1)
-		if offset {
-			start += 0.17
-			offset = false
-		} else {
-			offset = true
-		}
-		for i := start; i <= 1.34; i += 0.34 {
-			drawLine(c, xyz{i - 0.1, j, 0}, xyz{i, j, 0})
-			drawLine(c, xyz{i, j, 0}, xyz{i + 0.07, j - 0.07, 0})
-			drawLine(c, xyz{i, j, 0}, xyz{i + 0.07, j + 0.07, 0})
-		}
-	}
 }
 
 type camera struct {
