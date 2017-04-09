@@ -29,12 +29,13 @@ func run() error {
 
 var g Grid
 
-func loop(w, h int, t float64) {
+func loop(w, h int, t float64) bool {
 	if engine.KeyPressed(engine.KeyEscape) {
 		engine.Close()
-		return
+		return false
 	}
 	g.Draw(lcolor.RGB{R: 255})
+	return true
 }
 
 type xyz struct {
