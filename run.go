@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"image"
 
 	"github.com/MJKWoolnough/engine"
 	"github.com/MJKWoolnough/limage/lcolor"
@@ -23,6 +24,7 @@ func run() error {
 	}); err != nil {
 		return err
 	}
+	g.typ = 1
 	engine.Loop(loop)
 	return engine.Uninit()
 }
@@ -34,7 +36,7 @@ func loop(w, h int, t float64) bool {
 		engine.Close()
 		return false
 	}
-	g.Draw(lcolor.RGB{R: 255})
+	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), image.Rect(-1, -1, 1, 1))
 	return true
 }
 
