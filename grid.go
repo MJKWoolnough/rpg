@@ -1,8 +1,8 @@
 package main
 
 import (
-	"image"
 	"image/color"
+	"math"
 )
 
 type GridType uint8
@@ -21,7 +21,7 @@ func (g *Grid) Adjacent(x, y int) [][2]int {
 	return nil
 }
 
-func (g *Grid) Draw(c color.Color, ratio float64, bounds image.Rectangle) {
+func (g *Grid) Draw(c color.Color, ratio float64, bounds Rectangle) {
 	var xScale, yScale float64 = 1, 1
 	if ratio > 1 {
 		xScale = 1 / ratio
@@ -42,27 +42,36 @@ func (g *Grid) ScreenCoords(x, y int) (int, int) {
 
 func drawSquareGrid(c color.Color, xScale, yScale float64) {
 	for i := float64(-1); i < 1; i += xScale / 10 {
-		drawLine(c, xyz{i, -1, 0}, xyz{i, 1, 0})
+		drawLine(c, Point{i, -1}, Point{i, 1})
 	}
 	for i := float64(-1); i < 1; i += yScale / 10 {
-		drawLine(c, xyz{-1, i, 0}, xyz{1, i, 0})
+		drawLine(c, Point{-1, i}, Point{1, i})
 	}
 }
 
+const (
+	hexSide float64 = 0.05
+	hexX            = hexSide / 2
+)
+
+var hexY = math.Sqrt(3 * (hexSide * hexSide) / 4)
+
 func drawHexGrid(c color.Color, xScale, yScale float64) {
-	offset := true
-	for j := float64(-1); j <= 1.07; j += 0.07 {
-		start := float64(-1)
+	xSkip := 2 * (hexSide + hexX) * xScale
+	ySkip := hexY * yScale
+	offset := false
+	for j := float64(-1); j <= 1+ySkip; j += ySkip {
+		xStart := float64(-1)
 		if offset {
-			start += 0.17
+			xStart -= (hexSide + hexX) * xScale
 			offset = false
 		} else {
 			offset = true
 		}
-		for i := start; i <= 1.34; i += 0.34 {
-			drawLine(c, xyz{i - 0.1, j, 0}, xyz{i, j, 0})
-			drawLine(c, xyz{i, j, 0}, xyz{i + 0.07, j - 0.07, 0})
-			drawLine(c, xyz{i, j, 0}, xyz{i + 0.07, j + 0.07, 0})
+		for i := xStart; i <= 1+xSkip; i += xSkip {
+			drawLine(c, Point{i - hexSide*xScale, j}, Point{i, j})
+			drawLine(c, Point{i, j}, Point{i + hexX*xScale, j - hexY*yScale})
+			drawLine(c, Point{i, j}, Point{i + hexX*xScale, j + hexY*yScale})
 		}
 	}
 }

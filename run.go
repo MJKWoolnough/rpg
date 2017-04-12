@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"image"
 
 	"github.com/MJKWoolnough/engine"
 	"github.com/MJKWoolnough/limage/lcolor"
@@ -36,15 +35,11 @@ func loop(w, h int, t float64) bool {
 		engine.Close()
 		return false
 	}
-	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), image.Rect(-1, -1, 1, 1))
+	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), Rectangle{Min: Point{-1, -1}, Max: Point{1, 1}})
 	return true
 }
 
-type xyz struct {
-	X, Y, Z float64
-}
-
 type camera struct {
-	Position, Facing xyz
+	Position, Facing Point
 	Yaw, Pitch, Roll float64
 }
