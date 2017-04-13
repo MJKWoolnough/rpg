@@ -8,6 +8,10 @@ import (
 	"github.com/go-gl/gl/v2.1/gl"
 )
 
+func clearScreen() {
+	gl.Clear(gl.COLOR_BUFFER_BIT)
+}
+
 func drawLine(c color.Color, start, end Point) {
 	gl.LineWidth(2.5)
 	r, g, b, a := c.RGBA()

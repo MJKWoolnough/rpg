@@ -23,19 +23,38 @@ func run() error {
 	}); err != nil {
 		return err
 	}
-	g.typ = 1
+	//g.typ = 1
 	engine.Loop(loop)
 	return engine.Uninit()
 }
 
-var g Grid
+var (
+	g      Grid
+	offset Point
+)
 
 func loop(w, h int, t float64) bool {
 	if engine.KeyPressed(engine.KeyEscape) {
 		engine.Close()
 		return false
 	}
-	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), Rectangle{Min: Point{-1, -1}, Max: Point{1, 1}})
+	if engine.KeyPressed(engine.KeyLeft) {
+		offset.X += 0.015625
+	} else if engine.KeyPressed(engine.KeyRight) {
+		offset.X -= 0.015625
+	}
+	if engine.KeyPressed(engine.KeyUp) {
+		offset.Y -= 0.015625
+	} else if engine.KeyPressed(engine.KeyDown) {
+		offset.Y += 0.015625
+	}
+	clearScreen()
+	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), offset, Rectangle{Min: Point{-0.5, -0.5}, Max: Point{0.5, 0.5}})
+	green := lcolor.RGB{G: 255}
+	drawLine(green, Point{-0.5, -0.5}, Point{0.5, -0.5})
+	drawLine(green, Point{-0.5, -0.5}, Point{-0.5, 0.5})
+	drawLine(green, Point{-0.5, 0.5}, Point{0.5, 0.5})
+	drawLine(green, Point{0.5, -0.5}, Point{0.5, 0.5})
 	return true
 }
 

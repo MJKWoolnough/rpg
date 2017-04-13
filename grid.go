@@ -21,7 +21,7 @@ func (g *Grid) Adjacent(x, y int) [][2]int {
 	return nil
 }
 
-func (g *Grid) Draw(c color.Color, ratio float64, bounds Rectangle) {
+func (g *Grid) Draw(c color.Color, ratio float64, offset Point, bounds Rectangle) {
 	var xScale, yScale float64 = 1, 1
 	if ratio > 1 {
 		xScale = 1 / ratio
@@ -30,9 +30,9 @@ func (g *Grid) Draw(c color.Color, ratio float64, bounds Rectangle) {
 	}
 	switch g.typ {
 	case GridHex:
-		drawHexGrid(c, xScale, yScale)
+		drawHexGrid(c, xScale, yScale, offset, bounds)
 	default:
-		drawSquareGrid(c, xScale, yScale)
+		drawSquareGrid(c, xScale, yScale, offset, bounds)
 	}
 }
 
@@ -40,12 +40,22 @@ func (g *Grid) ScreenCoords(x, y int) (int, int) {
 	return 0, 0
 }
 
-func drawSquareGrid(c color.Color, xScale, yScale float64) {
-	for i := float64(-1); i < 1; i += xScale / 10 {
-		drawLine(c, Point{i, -1}, Point{i, 1})
+const squareSide = 0.1
+
+func drawSquareGrid(c color.Color, xScale, yScale float64, offset Point, bounds Rectangle) {
+	startX := bounds.Min.X + math.Mod(offset.X, xScale*squareSide)
+	if startX < bounds.Min.X {
+		startX += xScale * squareSide
 	}
-	for i := float64(-1); i < 1; i += yScale / 10 {
-		drawLine(c, Point{-1, i}, Point{1, i})
+	for i := startX; i <= bounds.Max.X; i += xScale * squareSide {
+		drawLine(c, Point{i, bounds.Min.Y}, Point{i, bounds.Max.Y})
+	}
+	startY := bounds.Min.Y + math.Mod(offset.Y, yScale*squareSide)
+	if startY < bounds.Min.Y {
+		startY += yScale * squareSide
+	}
+	for i := startY; i <= bounds.Max.Y; i += yScale * squareSide {
+		drawLine(c, Point{bounds.Min.X, i}, Point{bounds.Max.X, i})
 	}
 }
 
@@ -56,17 +66,17 @@ const (
 
 var hexY = math.Sqrt(3 * (hexSide * hexSide) / 4)
 
-func drawHexGrid(c color.Color, xScale, yScale float64) {
+func drawHexGrid(c color.Color, xScale, yScale float64, offset Point, bounds Rectangle) {
 	xSkip := 2 * (hexSide + hexX) * xScale
 	ySkip := hexY * yScale
-	offset := false
+	rowOffset := false
 	for j := float64(-1); j <= 1+ySkip; j += ySkip {
 		xStart := float64(-1)
-		if offset {
+		if rowOffset {
 			xStart -= (hexSide + hexX) * xScale
-			offset = false
+			rowOffset = false
 		} else {
-			offset = true
+			rowOffset = true
 		}
 		for i := xStart; i <= 1+xSkip; i += xSkip {
 			drawLine(c, Point{i - hexSide*xScale, j}, Point{i, j})
