@@ -39,22 +39,19 @@ func loop(w, h int, t float64) bool {
 		return false
 	}
 	if engine.KeyPressed(engine.KeyLeft) {
-		offset.X += 0.015625
+		offset.X += 0.00390625
 	} else if engine.KeyPressed(engine.KeyRight) {
-		offset.X -= 0.015625
+		offset.X -= 0.00390625
 	}
 	if engine.KeyPressed(engine.KeyUp) {
-		offset.Y -= 0.015625
+		offset.Y -= 0.00390625
 	} else if engine.KeyPressed(engine.KeyDown) {
-		offset.Y += 0.015625
+		offset.Y += 0.00390625
 	}
 	clearScreen()
-	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), offset, Rectangle{Min: Point{-0.5, -0.5}, Max: Point{0.5, 0.5}})
-	green := lcolor.RGB{G: 255}
-	drawLine(green, Point{-0.5, -0.5}, Point{0.5, -0.5})
-	drawLine(green, Point{-0.5, -0.5}, Point{-0.5, 0.5})
-	drawLine(green, Point{-0.5, 0.5}, Point{0.5, 0.5})
-	drawLine(green, Point{0.5, -0.5}, Point{0.5, 0.5})
+	window := Rectangle{Min: Point{X: -0.5, Y: -0.5}, Max: Point{X: 0.5, Y: 0.5}}
+	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), offset, window)
+	drawSquare(lcolor.RGB{G: 255}, window)
 	return true
 }
 

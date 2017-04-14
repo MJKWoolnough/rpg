@@ -21,7 +21,7 @@ func (g *Grid) Adjacent(x, y int) [][2]int {
 	return nil
 }
 
-func (g *Grid) Draw(c color.Color, ratio float64, offset Point, bounds Rectangle) {
+func (g *Grid) Draw(c color.Color, ratio float64, offset Point, window Rectangle) {
 	var xScale, yScale float64 = 1, 1
 	if ratio > 1 {
 		xScale = 1 / ratio
@@ -30,9 +30,9 @@ func (g *Grid) Draw(c color.Color, ratio float64, offset Point, bounds Rectangle
 	}
 	switch g.typ {
 	case GridHex:
-		drawHexGrid(c, xScale, yScale, offset, bounds)
+		drawHexGrid(c, xScale, yScale, offset, window)
 	default:
-		drawSquareGrid(c, xScale, yScale, offset, bounds)
+		drawSquareGrid(c, xScale, yScale, offset, window)
 	}
 }
 
@@ -42,20 +42,20 @@ func (g *Grid) ScreenCoords(x, y int) (int, int) {
 
 const squareSide = 0.1
 
-func drawSquareGrid(c color.Color, xScale, yScale float64, offset Point, bounds Rectangle) {
-	startX := bounds.Min.X + math.Mod(offset.X, xScale*squareSide)
-	if startX < bounds.Min.X {
+func drawSquareGrid(c color.Color, xScale, yScale float64, offset Point, window Rectangle) {
+	startX := window.Min.X + math.Mod(offset.X, xScale*squareSide)
+	if startX < window.Min.X {
 		startX += xScale * squareSide
 	}
-	for i := startX; i <= bounds.Max.X; i += xScale * squareSide {
-		drawLine(c, Point{i, bounds.Min.Y}, Point{i, bounds.Max.Y})
+	for i := startX; i <= window.Max.X; i += xScale * squareSide {
+		drawLine(c, Point{i, window.Min.Y}, Point{i, window.Max.Y})
 	}
-	startY := bounds.Min.Y + math.Mod(offset.Y, yScale*squareSide)
-	if startY < bounds.Min.Y {
+	startY := window.Min.Y + math.Mod(offset.Y, yScale*squareSide)
+	if startY < window.Min.Y {
 		startY += yScale * squareSide
 	}
-	for i := startY; i <= bounds.Max.Y; i += yScale * squareSide {
-		drawLine(c, Point{bounds.Min.X, i}, Point{bounds.Max.X, i})
+	for i := startY; i <= window.Max.Y; i += yScale * squareSide {
+		drawLine(c, Point{window.Min.X, i}, Point{window.Max.X, i})
 	}
 }
 
@@ -66,7 +66,7 @@ const (
 
 var hexY = math.Sqrt(3 * (hexSide * hexSide) / 4)
 
-func drawHexGrid(c color.Color, xScale, yScale float64, offset Point, bounds Rectangle) {
+func drawHexGrid(c color.Color, xScale, yScale float64, offset Point, window Rectangle) {
 	xSkip := 2 * (hexSide + hexX) * xScale
 	ySkip := hexY * yScale
 	rowOffset := false
