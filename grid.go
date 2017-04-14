@@ -5,83 +5,93 @@ import (
 	"math"
 )
 
-type GridType uint8
-
-const (
-	GridSquare GridType = iota
-	GridHex
-	//GridIso
-)
-
-type Grid struct {
-	typ GridType
+type Grid interface {
+	OffsetBy(Point)
+	Window(Rectangle)
+	Draw(color.Color, float64)
 }
 
-func (g *Grid) Adjacent(x, y int) [][2]int {
-	return nil
+type grid struct {
+	offset Point
+	window Rectangle
 }
 
-func (g *Grid) Draw(c color.Color, ratio float64, offset Point, window Rectangle) {
+func (g *grid) OffsetBy(p Point) {
+	g.offset = g.offset.Add(p)
+}
+
+func (g *grid) Window(r Rectangle) {
+	g.window = r
+}
+
+type SquareGrid struct {
+	Side float64
+	grid
+}
+
+func NewSquareGrid(s float64) *SquareGrid {
+	return &SquareGrid{Side: s}
+}
+
+func (s *SquareGrid) Draw(c color.Color, ratio float64) {
 	var xScale, yScale float64 = 1, 1
 	if ratio > 1 {
 		xScale = 1 / ratio
 	} else if ratio < 1 {
 		yScale = ratio
 	}
-	switch g.typ {
-	case GridHex:
-		drawHexGrid(c, xScale, yScale, offset, window)
-	default:
-		drawSquareGrid(c, xScale, yScale, offset, window)
+	startX := s.window.Min.X + math.Mod(s.offset.X, xScale*s.Side)
+	if startX < s.window.Min.X {
+		startX += xScale * s.Side
+	}
+	for i := startX; i <= s.window.Max.X; i += xScale * s.Side {
+		drawLine(c, Point{i, s.window.Min.Y}, Point{i, s.window.Max.Y})
+	}
+	startY := s.window.Min.Y + math.Mod(s.offset.Y, yScale*s.Side)
+	if startY < s.window.Min.Y {
+		startY += yScale * s.Side
+	}
+	for i := startY; i <= s.window.Max.Y; i += yScale * s.Side {
+		drawLine(c, Point{s.window.Min.X, i}, Point{s.window.Max.X, i})
 	}
 }
 
-func (g *Grid) ScreenCoords(x, y int) (int, int) {
-	return 0, 0
+type HexGrid struct {
+	Side         float64
+	xDiff, yDiff float64
+	grid
 }
 
-const squareSide = 0.1
-
-func drawSquareGrid(c color.Color, xScale, yScale float64, offset Point, window Rectangle) {
-	startX := window.Min.X + math.Mod(offset.X, xScale*squareSide)
-	if startX < window.Min.X {
-		startX += xScale * squareSide
-	}
-	for i := startX; i <= window.Max.X; i += xScale * squareSide {
-		drawLine(c, Point{i, window.Min.Y}, Point{i, window.Max.Y})
-	}
-	startY := window.Min.Y + math.Mod(offset.Y, yScale*squareSide)
-	if startY < window.Min.Y {
-		startY += yScale * squareSide
-	}
-	for i := startY; i <= window.Max.Y; i += yScale * squareSide {
-		drawLine(c, Point{window.Min.X, i}, Point{window.Max.X, i})
+func NewHexGrid(side float64) *HexGrid {
+	return &HexGrid{
+		Side:  side,
+		xDiff: side / 2,
+		yDiff: math.Sqrt(3 * (side * side) / 4),
 	}
 }
 
-const (
-	hexSide float64 = 0.05
-	hexX            = hexSide / 2
-)
-
-var hexY = math.Sqrt(3 * (hexSide * hexSide) / 4)
-
-func drawHexGrid(c color.Color, xScale, yScale float64, offset Point, window Rectangle) {
-	xSkip := 2 * (hexSide + hexX) * xScale
-	ySkip := hexY * yScale
+func (h *HexGrid) Draw(c color.Color, ratio float64) {
+	var xScale, yScale float64 = 1, 1
+	if ratio > 1 {
+		xScale = 1 / ratio
+	} else if ratio < 1 {
+		yScale = ratio
+	}
+	xSkip := 2 * (h.Side + h.xDiff) * xScale
+	ySkip := h.yDiff * yScale
 	rowOffset := false
 	for j := float64(-1); j <= 1+ySkip; j += ySkip {
 		xStart := float64(-1)
 		if rowOffset {
-			xStart -= (hexSide + hexX) * xScale
+			xStart -= (h.Side + h.xDiff) * xScale
 			rowOffset = false
 		} else {
 			rowOffset = true
 		}
 		for i := xStart; i <= 1+xSkip; i += xSkip {
-			drawLine(c, Point{i - hexSide*xScale, j}, Point{i, j})
-			drawLine(c, Point{i, j}, Point{i + hexX*xScale, j - hexY*yScale})
-			drawLine(c, Point{i, j}, Point{i + hexX*xScale, j + hexY*yScale})
+			drawLine(c, Point{i - h.Side*xScale, j}, Point{i, j})
+			drawLine(c, Point{i, j}, Point{i + h.xDiff*xScale, j - h.yDiff*yScale})
+			drawLine(c, Point{i, j}, Point{i + h.xDiff*xScale, j + h.yDiff*yScale})
 		}
 	}
 }

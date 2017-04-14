@@ -23,35 +23,35 @@ func run() error {
 	}); err != nil {
 		return err
 	}
-	//g.typ = 1
+	g.Window(Rectangle{Min: Point{X: -0.5, Y: -0.5}, Max: Point{X: 0.5, Y: 0.5}})
 	engine.Loop(loop)
 	return engine.Uninit()
 }
 
-var (
-	g      Grid
-	offset Point
-)
+var g = NewSquareGrid(0.1)
+
+const moveAmount = float64(1) / 256
 
 func loop(w, h int, t float64) bool {
+	var offset Point
 	if engine.KeyPressed(engine.KeyEscape) {
 		engine.Close()
 		return false
 	}
 	if engine.KeyPressed(engine.KeyLeft) {
-		offset.X += 0.00390625
+		offset.X = moveAmount
 	} else if engine.KeyPressed(engine.KeyRight) {
-		offset.X -= 0.00390625
+		offset.X = -moveAmount
 	}
 	if engine.KeyPressed(engine.KeyUp) {
-		offset.Y -= 0.00390625
+		offset.Y = -moveAmount
 	} else if engine.KeyPressed(engine.KeyDown) {
-		offset.Y += 0.00390625
+		offset.Y = moveAmount
 	}
 	clearScreen()
-	window := Rectangle{Min: Point{X: -0.5, Y: -0.5}, Max: Point{X: 0.5, Y: 0.5}}
-	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h), offset, window)
-	drawSquare(lcolor.RGB{G: 255}, window)
+	g.OffsetBy(offset)
+	g.Draw(lcolor.RGB{R: 255}, float64(w)/float64(h))
+	drawSquare(lcolor.RGB{G: 255}, Rectangle{Min: Point{X: -0.5, Y: -0.5}, Max: Point{X: 0.5, Y: 0.5}})
 	return true
 }
 
