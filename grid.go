@@ -34,12 +34,7 @@ func NewSquareGrid(s float64) *SquareGrid {
 }
 
 func (s *SquareGrid) Draw(c color.Color, ratio float64) {
-	var xScale, yScale float64 = 1, 1
-	if ratio > 1 {
-		xScale = 1 / ratio
-	} else if ratio < 1 {
-		yScale = ratio
-	}
+	xScale, yScale = scales(ratio)
 	startX := s.window.Min.X + math.Mod(s.offset.X, xScale*s.Side)
 	if startX < s.window.Min.X {
 		startX += xScale * s.Side
@@ -71,12 +66,7 @@ func NewHexGrid(side float64) *HexGrid {
 }
 
 func (h *HexGrid) Draw(c color.Color, ratio float64) {
-	var xScale, yScale float64 = 1, 1
-	if ratio > 1 {
-		xScale = 1 / ratio
-	} else if ratio < 1 {
-		yScale = ratio
-	}
+	xScale, yScale = scales(ratio)
 	xSkip := 2 * (h.Side + h.xDiff) * xScale
 	ySkip := h.yDiff * yScale
 	rowOffset := false
