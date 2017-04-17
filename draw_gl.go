@@ -9,7 +9,7 @@ import (
 )
 
 func clearScreen() {
-	gl.Clear(gl.COLOR_BUFFER_BIT)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
 func drawLine(c color.Color, start, end Point) {
