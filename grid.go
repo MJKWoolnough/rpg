@@ -33,20 +33,19 @@ func NewSquareGrid(s float64) *SquareGrid {
 	return &SquareGrid{Side: s}
 }
 
-func (s *SquareGrid) Draw(c color.Color, ratio float64) {
-	xScale, yScale := scales(ratio)
-	startX := s.window.Min.X + math.Mod(s.offset.X, xScale*s.Side)
+func (s *SquareGrid) Draw(c color.Color) {
+	startX := s.window.Min.X + math.Mod(s.offset.X, s.Side)
 	if startX < s.window.Min.X {
-		startX += xScale * s.Side
+		startX += s.Side
 	}
-	for i := startX; i <= s.window.Max.X; i += xScale * s.Side {
+	for i := startX; i <= s.window.Max.X; i += s.Side {
 		drawLine(c, Point{i, s.window.Min.Y}, Point{i, s.window.Max.Y})
 	}
-	startY := s.window.Min.Y + math.Mod(s.offset.Y, yScale*s.Side)
+	startY := s.window.Min.Y + math.Mod(s.offset.Y, s.Side)
 	if startY < s.window.Min.Y {
-		startY += yScale * s.Side
+		startY += s.Side
 	}
-	for i := startY; i <= s.window.Max.Y; i += yScale * s.Side {
+	for i := startY; i <= s.window.Max.Y; i += s.Side {
 		drawLine(c, Point{s.window.Min.X, i}, Point{s.window.Max.X, i})
 	}
 }
