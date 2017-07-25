@@ -27,7 +27,7 @@ func (r *Reader) ReadBytes() []byte {
 }
 
 func NewReader(r io.Reader) *Reader {
-	return &Reader{byteio.StickyReader{Reader: byteio.LittleEndianReader{Reader: r}}}
+	return &Reader{byteio.StickyLittleEndianReader{Reader: r}}
 }
 
 type Writer struct {
@@ -43,5 +43,5 @@ func (w *Writer) WriteBytes(s []byte) {
 }
 
 func NewWriter(w io.Writer) *Writer {
-	return &Writer{StickyWriter: byteio.StickyWriter{Writer: byteio.LittleEndianWriter{Writer: w}}}
+	return &Writer{StickyWriter: byteio.StickyLittleEndianWriter{Writer: w}}
 }
