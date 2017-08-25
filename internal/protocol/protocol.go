@@ -14,7 +14,7 @@ const (
 )
 
 type Reader struct {
-	byteio.StickyReader
+	byteio.StickyLittleEndianReader
 }
 
 func (r *Reader) ReadBytes() []byte {
