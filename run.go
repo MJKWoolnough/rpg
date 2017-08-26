@@ -36,6 +36,16 @@ func run() error {
 	}
 	f.Close()
 
+	f, err = os.Open("font.ttf")
+	if err != nil {
+		return err
+	}
+	font, err = engine.LoadFont(f)
+	f.Close()
+	if err != nil {
+		return err
+	}
+
 	logo.size.Max.X = float64(logo.Image.Bounds.Max.X)
 	logo.size.Max.Y = float64(logo.Image.Bounds.Max.Y)
 
@@ -50,6 +60,7 @@ var (
 	first         = true
 	logo          Image
 	width, height int
+	font          engine.Font
 )
 
 const moveAmount = float64(2)
@@ -92,6 +103,7 @@ func loop(w, h int, t float64) bool {
 	g.Draw(lcolor.RGB{R: 255})
 	drawSquare(lcolor.RGB{G: 255}, g.window)
 	drawLine(lcolor.RGB{B: 255}, Point{}, Point{X: 0.5, Y: 0.5})
+	font.Render(-1, 1, 0, 0, "e")
 	logo.Draw()
 	return true
 }

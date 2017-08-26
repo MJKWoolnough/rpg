@@ -6,6 +6,7 @@ import (
 	"log"
 
 	_ "github.com/MJKWoolnough/engine/graphics/gl21"
+	_ "github.com/MJKWoolnough/engine/text/gl21"
 	_ "github.com/MJKWoolnough/engine/windows/glfw32"
 )
 
