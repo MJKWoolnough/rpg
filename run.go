@@ -5,8 +5,8 @@ import (
 	_ "image/png"
 	"os"
 
-	"github.com/MJKWoolnough/engine"
-	"github.com/MJKWoolnough/limage/lcolor"
+	"vimagination.zapto.org/engine"
+	"vimagination.zapto.org/limage/lcolor"
 )
 
 func run() error {

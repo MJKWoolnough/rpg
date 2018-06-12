@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/MJKWoolnough/engine/windows/webgl"
-	"github.com/MJKWoolnough/gopherjs/xjs"
+	"vimagination.zapto.org/engine/windows/webgl"
+	"vimagination.zapto.org/gopherjs/xjs"
 	"honnef.co/go/js/dom"
 )
 

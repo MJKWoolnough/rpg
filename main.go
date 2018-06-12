@@ -1,13 +1,13 @@
 //+build !js
 
-package main
+package main // import "vimagination.zapto.org/rpg"
 
 import (
 	"log"
 
-	_ "github.com/MJKWoolnough/engine/graphics/gl21"
-	_ "github.com/MJKWoolnough/engine/text/gl21"
-	_ "github.com/MJKWoolnough/engine/windows/glfw32"
+	_ "vimagination.zapto.org/engine/graphics/gl21"
+	_ "vimagination.zapto.org/engine/text/gl21"
+	_ "vimagination.zapto.org/engine/windows/glfw32"
 )
 
 func main() {

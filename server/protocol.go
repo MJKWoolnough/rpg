@@ -1,9 +1,9 @@
-package main
+package main // import "vimagination.zapto.org/rpg/server"
 
 import (
 	"net"
 
-	"github.com/MJKWoolnough/rpg/internal/protocol"
+	"vimagination.zapto.org/rpg/internal/protocol"
 )
 
 func handleConn(c net.Conn) {

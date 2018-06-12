@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/MJKWoolnough/httpdir"
+	"vimagination.zapto.org/httpdir"
 	"golang.org/x/net/websocket"
 )
 

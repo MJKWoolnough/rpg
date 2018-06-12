@@ -1,9 +1,9 @@
-package protocol
+package protocol // import "vimagination.zapto.org/rpg/internal/protocol"
 
 import (
 	"io"
 
-	"github.com/MJKWoolnough/byteio"
+	"vimagination.zapto.org/byteio"
 )
 
 const (
